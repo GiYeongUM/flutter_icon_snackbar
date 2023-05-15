@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_icon_dialog/flutter_icon_snackbar.dart';
+import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
 
 void main() {
   runApp(const ExampleApp());
