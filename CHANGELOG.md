@@ -1,3 +1,6 @@
+## 1.0.2
+- update Flutter version 3.10.0
+
 ## 1.0.1
 - fix flutter version
 
