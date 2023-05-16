@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:icon_animated/icon_animated.dart';
 
+/// soon update more icons
+/// If there is an icon you want, please request it in the github issue space
+
 enum SnackBarType {
   save,
   fail,
   alert,
 }
+
+/// snackbar style
 
 class SnackBarStyle {
   final Color? backgroundColor;
@@ -17,11 +22,23 @@ class SnackBarStyle {
 }
 
 class IconSnackBar {
+
+  /// Show snack bar
+  ///
+  /// [required]
+  /// BuildContext
+  /// label
+  /// snackBarType
+  ///
+  /// [optional]
+  /// Duration (animation)
+  /// DismissDirection (swipe direction)
+  /// SnackBarStyle
+
   static show({
     required BuildContext context,
     required String label,
     required SnackBarType snackBarType,
-    double? iconAvatarRadius,
     Duration? duration,
     DismissDirection? direction,
     SnackBarStyle snackBarStyle = const SnackBarStyle(),
@@ -79,6 +96,8 @@ class IconSnackBar {
   }
 }
 
+/// If you click on the snack bar, the logic of the snack bar ends immediately.
+
 
 class SnackBarWidget extends StatefulWidget implements SnackBarAction {
   const SnackBarWidget({
@@ -88,7 +107,7 @@ class SnackBarWidget extends StatefulWidget implements SnackBarAction {
     required this.label,
     required this.onPressed,
     this.backgroundColor = Colors.black,
-    this.labelTextStyle, this.showIconFirst = false, required this.iconType,
+    this.labelTextStyle, this.showIconFirst = false, required this.iconType, this.disabledBackgroundColor = Colors.black,
   }) : super(key: key);
 
   @override
@@ -103,14 +122,18 @@ class SnackBarWidget extends StatefulWidget implements SnackBarAction {
   @override
   final VoidCallback onPressed;
 
+  @override
   final Color backgroundColor;
+
+  @override
+  final Color disabledBackgroundColor;
+
   final TextStyle? labelTextStyle;
   final bool showIconFirst;
   final IconType iconType;
 
   @override
   State<SnackBarWidget> createState() => _SnackBarWidgetState();
-
 }
 
 class _SnackBarWidgetState extends State<SnackBarWidget> with SingleTickerProviderStateMixin {
