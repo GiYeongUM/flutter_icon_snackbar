@@ -56,25 +56,9 @@ class SnackBarStyle {
   final Color? backgroundColor;
   final Color iconColor;
   final TextStyle labelTextStyle;
-  final bool showIconFirst;
 
-  const SnackBarStyle({this.backgroundColor, this.iconColor = Colors.white, this.labelTextStyle = const TextStyle(), this.showIconFirst = false});
+  const SnackBarStyle({this.backgroundColor, this.iconColor = Colors.white, this.labelTextStyle = const TextStyle()});
 }
-```
-
-## 4. another animation
-
-Animation contains one more thing.
-
-<img width="308" alt="" src="https://github.com/GiYeongUM/flutter_icon_snackbar/raw/main/images/snackbar_type_4.gif">
-
-``` dart
-IconSnackBar.show(
-    context: context, 
-    snackBarType: SnackBarType.alert, 
-    label: 'Data required', 
-    snackBarStyle: const SnackBarStyle(showIconFirst: true) // this one
-);
 ```
 
 

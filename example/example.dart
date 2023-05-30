@@ -37,7 +37,7 @@ class ExamplePage extends StatelessWidget {
             ElevatedButton(
                 onPressed: (){
 
-                  IconSnackBar.show(context: context, snackBarType: SnackBarType.alert, label: 'Data required', snackBarStyle: const SnackBarStyle(showIconFirst: true));
+                  IconSnackBar.show(context: context, snackBarType: SnackBarType.alert, label: 'Data required');
 
                 }, child: const Text("test"))
           ],
