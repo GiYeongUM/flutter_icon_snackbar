@@ -1,3 +1,15 @@
+## 1.1.4
+- fix dispose error
+
+## 1.1.3
+- update icon package
+
+## 1.1.2
+- add dispose
+
+## 1.1.1
+- fix Ticker
+
 ## 1.1.0
 - fix package update
 - delete showIconFirst

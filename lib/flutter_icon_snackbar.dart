@@ -136,17 +136,20 @@ class SnackBarWidget extends StatefulWidget implements SnackBarAction {
   State<SnackBarWidget> createState() => _SnackBarWidgetState();
 }
 
-class _SnackBarWidgetState extends State<SnackBarWidget> with SingleTickerProviderStateMixin {
+class _SnackBarWidgetState extends State<SnackBarWidget> {
 
   var _fadeAnimationStart = false;
-
+  var disposed = false;
 
   @override
   void initState() {
     Future.delayed(const Duration(milliseconds: 300), () {
-      setState(() {
-        _fadeAnimationStart = true;
-      });
+      if(!disposed) {
+        setState(() {
+          _fadeAnimationStart = true;
+
+        });
+      }
     });
     super.initState();
   }
@@ -216,8 +219,12 @@ class _SnackBarWidgetState extends State<SnackBarWidget> with SingleTickerProvid
           ),
         ),
       );
+  }
 
-
+  @override
+  void dispose() {
+    disposed = true;
+    super.dispose();
   }
 
 }
