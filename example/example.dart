@@ -25,7 +25,6 @@ class ExamplePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Icon SnackBar'),
@@ -35,11 +34,10 @@ class ExamplePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             ElevatedButton(
-                onPressed: (){
-
-                  IconSnackBar.show(context: context, snackBarType: SnackBarType.alert, label: 'Data required');
-
-                }, child: const Text("test"))
+                onPressed: () {
+                  IconSnackBar.show(context, snackBarType: SnackBarType.alert, label: 'Data required');
+                },
+                child: const Text("test"))
           ],
         ),
       ),
