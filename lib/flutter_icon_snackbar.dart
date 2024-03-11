@@ -19,11 +19,13 @@ class SnackBarStyle {
   final Color iconColor;
   final TextStyle labelTextStyle;
 
-  const SnackBarStyle({this.backgroundColor, this.iconColor = Colors.white, this.labelTextStyle = const TextStyle()});
+  const SnackBarStyle(
+      {this.backgroundColor,
+      this.iconColor = Colors.white,
+      this.labelTextStyle = const TextStyle()});
 }
 
 class IconSnackBar {
-
   /// Show snack bar
   ///
   /// [required]
@@ -36,8 +38,8 @@ class IconSnackBar {
   /// DismissDirection (swipe direction)
   /// SnackBarStyle
 
-  static show({
-    required BuildContext context,
+  static show(
+    BuildContext context, {
     required String label,
     required SnackBarType snackBarType,
     Duration? duration,
@@ -58,7 +60,8 @@ class IconSnackBar {
             },
             label: label,
             backgroundColor: snackBarStyle.backgroundColor ?? Colors.green,
-            labelTextStyle: snackBarStyle.labelTextStyle, iconType: IconType.check, 
+            labelTextStyle: snackBarStyle.labelTextStyle,
+            iconType: IconType.check,
           ),
         ));
       case SnackBarType.fail:
@@ -74,7 +77,8 @@ class IconSnackBar {
             },
             label: label,
             backgroundColor: snackBarStyle.backgroundColor ?? Colors.red,
-            labelTextStyle: snackBarStyle.labelTextStyle, iconType: IconType.fail, 
+            labelTextStyle: snackBarStyle.labelTextStyle,
+            iconType: IconType.fail,
           ),
         ));
       case SnackBarType.alert:
@@ -90,7 +94,8 @@ class IconSnackBar {
             },
             label: label,
             backgroundColor: snackBarStyle.backgroundColor ?? Colors.black,
-            labelTextStyle: snackBarStyle.labelTextStyle, iconType: IconType.alert, 
+            labelTextStyle: snackBarStyle.labelTextStyle,
+            iconType: IconType.alert,
           ),
         ));
     }
@@ -98,7 +103,6 @@ class IconSnackBar {
 }
 
 /// If you click on the snack bar, the logic of the snack bar ends immediately.
-
 
 class SnackBarWidget extends StatefulWidget implements SnackBarAction {
   const SnackBarWidget({
@@ -108,7 +112,9 @@ class SnackBarWidget extends StatefulWidget implements SnackBarAction {
     required this.label,
     required this.onPressed,
     this.backgroundColor = Colors.black,
-    this.labelTextStyle, required this.iconType, this.disabledBackgroundColor = Colors.black,
+    this.labelTextStyle,
+    required this.iconType,
+    this.disabledBackgroundColor = Colors.black,
   }) : super(key: key);
 
   @override
@@ -137,88 +143,80 @@ class SnackBarWidget extends StatefulWidget implements SnackBarAction {
 }
 
 class _SnackBarWidgetState extends State<SnackBarWidget> {
-
   var _fadeAnimationStart = false;
   var disposed = false;
 
   @override
   void initState() {
     Future.delayed(const Duration(milliseconds: 300), () {
-      if(!disposed) {
+      if (!disposed) {
         setState(() {
           _fadeAnimationStart = true;
-
         });
       }
     });
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
-      return InkWell(
-        onTap: widget.onPressed,
-        child: ClipRRect(
-          clipBehavior: Clip.antiAliasWithSaveLayer,
-          borderRadius: BorderRadius.circular(15),
-          child: AnimatedContainer(
-            color: widget.backgroundColor,
-            curve: Curves.easeInOut,
-            duration: const Duration(milliseconds: 400),
+    return InkWell(
+      onTap: widget.onPressed,
+      child: ClipRRect(
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        borderRadius: BorderRadius.circular(15),
+        child: AnimatedContainer(
+          color: widget.backgroundColor,
+          curve: Curves.easeInOut,
+          duration: const Duration(milliseconds: 400),
+          height: 50,
+          child: SizedBox(
             height: 50,
-            child: SizedBox(
-              height: 50,
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Center(
-                    child: Container(
-                      margin: const EdgeInsets.only(left: 8),
-                      width: 40,
-                      child: CircleAvatar(
-                          radius: 20,
-                          backgroundColor: Colors.white.withOpacity(0),
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 400),
-                            child: IconAnimated(
-                              color: _fadeAnimationStart
-                                  ? Colors.white
-                                  : widget.backgroundColor,
-                              active: true,
-                              size: 40,
-                              iconType: widget.iconType,
-                            ),
-                          )),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Center(
+                  child: Container(
+                    margin: const EdgeInsets.only(left: 8),
+                    width: 40,
+                    child: CircleAvatar(
+                        radius: 20,
+                        backgroundColor: Colors.white.withOpacity(0),
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 400),
+                          child: IconAnimated(
+                            color: _fadeAnimationStart
+                                ? Colors.white
+                                : widget.backgroundColor,
+                            active: true,
+                            size: 40,
+                            iconType: widget.iconType,
+                          ),
+                        )),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Flexible(
+                  child: AnimatedContainer(
+                    margin: EdgeInsets.only(left: _fadeAnimationStart ? 0 : 10),
+                    duration: const Duration(milliseconds: 400),
+                    child: AnimatedOpacity(
+                      duration: const Duration(milliseconds: 400),
+                      opacity: _fadeAnimationStart ? 1.0 : 0.0,
+                      child: Text(widget.label,
+                          overflow: TextOverflow.visible,
+                          style: widget.labelTextStyle ??
+                              const TextStyle(
+                                  fontSize: 16, color: Colors.white)),
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      AnimatedContainer(
-                        margin: EdgeInsets.only(left: _fadeAnimationStart ? 0 : 10),
-                        duration: const Duration(milliseconds: 400),
-                        child: AnimatedOpacity(
-                          duration: const Duration(milliseconds: 400),
-                          opacity: _fadeAnimationStart ? 1.0 : 0.0,
-                          child: Text(widget.label,
-                              overflow: TextOverflow.visible,
-                              maxLines: 1,
-                              style: widget.labelTextStyle ??
-                                  const TextStyle(
-                                      fontSize: 16, color: Colors.white)),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
-      );
+      ),
+    );
   }
 
   @override
@@ -226,6 +224,4 @@ class _SnackBarWidgetState extends State<SnackBarWidget> {
     disposed = true;
     super.dispose();
   }
-
 }
-
