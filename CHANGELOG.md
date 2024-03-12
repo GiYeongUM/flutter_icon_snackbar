@@ -1,3 +1,6 @@
+## 1.1.6
+- add maxLines option ([#1](https://github.com/GiYeongUM/flutter_icon_snackbar/issues/1))
+
 ## 1.1.5
 - fix issue with multiline text ([#1](https://github.com/GiYeongUM/flutter_icon_snackbar/issues/1))
 

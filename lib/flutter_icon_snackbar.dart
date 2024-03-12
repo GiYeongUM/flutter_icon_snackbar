@@ -18,11 +18,14 @@ class SnackBarStyle {
   final Color? backgroundColor;
   final Color iconColor;
   final TextStyle labelTextStyle;
+  final int? maxLines;
 
-  const SnackBarStyle(
-      {this.backgroundColor,
-      this.iconColor = Colors.white,
-      this.labelTextStyle = const TextStyle()});
+  const SnackBarStyle({
+    this.backgroundColor,
+    this.iconColor = Colors.white,
+    this.labelTextStyle = const TextStyle(),
+    this.maxLines,
+  });
 }
 
 class IconSnackBar {
@@ -62,6 +65,7 @@ class IconSnackBar {
             backgroundColor: snackBarStyle.backgroundColor ?? Colors.green,
             labelTextStyle: snackBarStyle.labelTextStyle,
             iconType: IconType.check,
+            maxLines: snackBarStyle.maxLines,
           ),
         ));
       case SnackBarType.fail:
@@ -79,6 +83,7 @@ class IconSnackBar {
             backgroundColor: snackBarStyle.backgroundColor ?? Colors.red,
             labelTextStyle: snackBarStyle.labelTextStyle,
             iconType: IconType.fail,
+            maxLines: snackBarStyle.maxLines,
           ),
         ));
       case SnackBarType.alert:
@@ -96,6 +101,7 @@ class IconSnackBar {
             backgroundColor: snackBarStyle.backgroundColor ?? Colors.black,
             labelTextStyle: snackBarStyle.labelTextStyle,
             iconType: IconType.alert,
+            maxLines: snackBarStyle.maxLines,
           ),
         ));
     }
@@ -107,14 +113,15 @@ class IconSnackBar {
 class SnackBarWidget extends StatefulWidget implements SnackBarAction {
   const SnackBarWidget({
     Key? key,
-    this.textColor,
-    this.disabledTextColor,
+    required this.iconType,
     required this.label,
     required this.onPressed,
+    this.textColor,
+    this.disabledTextColor,
     this.backgroundColor = Colors.black,
     this.labelTextStyle,
-    required this.iconType,
     this.disabledBackgroundColor = Colors.black,
+    this.maxLines,
   }) : super(key: key);
 
   @override
@@ -137,6 +144,7 @@ class SnackBarWidget extends StatefulWidget implements SnackBarAction {
 
   final TextStyle? labelTextStyle;
   final IconType iconType;
+  final int? maxLines;
 
   @override
   State<SnackBarWidget> createState() => _SnackBarWidgetState();
@@ -166,35 +174,28 @@ class _SnackBarWidgetState extends State<SnackBarWidget> {
         clipBehavior: Clip.antiAliasWithSaveLayer,
         borderRadius: BorderRadius.circular(15),
         child: AnimatedContainer(
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
           color: widget.backgroundColor,
           curve: Curves.easeInOut,
           duration: const Duration(milliseconds: 400),
-          height: 50,
           child: SizedBox(
-            height: 50,
             child: Row(
               mainAxisSize: MainAxisSize.max,
               children: [
-                Center(
-                  child: Container(
-                    margin: const EdgeInsets.only(left: 8),
-                    width: 40,
-                    child: CircleAvatar(
-                        radius: 20,
-                        backgroundColor: Colors.white.withOpacity(0),
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 400),
-                          child: IconAnimated(
-                            color: _fadeAnimationStart
-                                ? Colors.white
-                                : widget.backgroundColor,
-                            active: true,
-                            size: 40,
-                            iconType: widget.iconType,
-                          ),
-                        )),
-                  ),
-                ),
+                CircleAvatar(
+                    radius: 20,
+                    backgroundColor: Colors.white.withOpacity(0),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 400),
+                      child: IconAnimated(
+                        color: _fadeAnimationStart
+                            ? Colors.white
+                            : widget.backgroundColor,
+                        active: true,
+                        size: 40,
+                        iconType: widget.iconType,
+                      ),
+                    )),
                 const SizedBox(width: 8),
                 Flexible(
                   child: AnimatedContainer(
@@ -203,11 +204,13 @@ class _SnackBarWidgetState extends State<SnackBarWidget> {
                     child: AnimatedOpacity(
                       duration: const Duration(milliseconds: 400),
                       opacity: _fadeAnimationStart ? 1.0 : 0.0,
-                      child: Text(widget.label,
-                          overflow: TextOverflow.visible,
-                          style: widget.labelTextStyle ??
-                              const TextStyle(
-                                  fontSize: 16, color: Colors.white)),
+                      child: Text(
+                        widget.label,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: widget.maxLines,
+                        style: widget.labelTextStyle ??
+                            const TextStyle(fontSize: 16, color: Colors.white),
+                      ),
                     ),
                   ),
                 ),
