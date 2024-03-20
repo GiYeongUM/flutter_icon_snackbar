@@ -6,8 +6,9 @@ import 'package:icon_animated/icon_animated.dart';
 /// soon update more icons
 /// If there is an icon you want, please request it in the github issue space
 
+
 enum SnackBarType {
-  save,
+  success,
   fail,
   alert,
 }
@@ -47,14 +48,15 @@ class IconSnackBar {
     required SnackBarType snackBarType,
     Duration? duration,
     DismissDirection? direction,
+    SnackBarBehavior behavior = SnackBarBehavior.fixed,
     SnackBarStyle snackBarStyle = const SnackBarStyle(),
   }) {
     switch (snackBarType) {
-      case SnackBarType.save:
+      case SnackBarType.success:
         return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           duration: duration ?? const Duration(seconds: 2),
           dismissDirection: direction ?? DismissDirection.down,
-          behavior: SnackBarBehavior.fixed,
+          behavior: behavior,
           backgroundColor: Colors.transparent,
           elevation: 0,
           content: SnackBarWidget(
@@ -72,7 +74,7 @@ class IconSnackBar {
         return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           duration: duration ?? const Duration(seconds: 2),
           dismissDirection: direction ?? DismissDirection.down,
-          behavior: SnackBarBehavior.fixed,
+          behavior: behavior,
           backgroundColor: Colors.transparent,
           elevation: 0,
           content: SnackBarWidget(
@@ -90,7 +92,7 @@ class IconSnackBar {
         return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           duration: duration ?? const Duration(seconds: 2),
           dismissDirection: direction ?? DismissDirection.down,
-          behavior: SnackBarBehavior.fixed,
+          behavior: behavior,
           backgroundColor: Colors.transparent,
           elevation: 0,
           content: SnackBarWidget(

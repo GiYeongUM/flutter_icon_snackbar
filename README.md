@@ -27,7 +27,7 @@ Default type of icon_snackbar.
 ``` dart
 IconSnackBar.show(
     context: context, 
-    snackBarType: SnackBarType.save, 
+    snackBarType: SnackBarType.success, 
     label: 'Save successfully'
 );
 ```

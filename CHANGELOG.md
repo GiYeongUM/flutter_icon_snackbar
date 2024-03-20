@@ -1,3 +1,7 @@
+## 1.1.7
+- add SnackBarBehavior option ([#2](https://github.com/GiYeongUM/flutter_icon_snackbar/issues/2))
+- change SnackBarType save to success
+
 ## 1.1.6
 - add maxLines option ([#1](https://github.com/GiYeongUM/flutter_icon_snackbar/issues/1))
 
