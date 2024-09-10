@@ -38,9 +38,7 @@ class ExamplePage extends StatelessWidget {
                   IconSnackBar.show(
                     context,
                     snackBarType: SnackBarType.fail,
-                    snackBarStyle: const SnackBarStyle(
-                      maxLines: 1,
-                    ),
+                    maxLines: 1,
                     label: 'Data required',
                   );
                 },

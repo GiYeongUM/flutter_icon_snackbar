@@ -1,3 +1,7 @@
+## 1.2.0
+- fix SnackBarStyle error ([#3](https://github.com/GiYeongUM/flutter_icon_snackbar/issues/3))
+- remove SnackBarStyle
+
 ## 1.1.7
 - add SnackBarBehavior option ([#2](https://github.com/GiYeongUM/flutter_icon_snackbar/issues/2))
 - change SnackBarType save to success

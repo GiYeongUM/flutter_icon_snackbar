@@ -6,27 +6,10 @@ import 'package:icon_animated/icon_animated.dart';
 /// soon update more icons
 /// If there is an icon you want, please request it in the github issue space
 
-
 enum SnackBarType {
   success,
   fail,
   alert,
-}
-
-/// snackbar style
-
-class SnackBarStyle {
-  final Color? backgroundColor;
-  final Color iconColor;
-  final TextStyle labelTextStyle;
-  final int? maxLines;
-
-  const SnackBarStyle({
-    this.backgroundColor,
-    this.iconColor = Colors.white,
-    this.labelTextStyle = const TextStyle(),
-    this.maxLines,
-  });
 }
 
 class IconSnackBar {
@@ -42,70 +25,58 @@ class IconSnackBar {
   /// DismissDirection (swipe direction)
   /// SnackBarStyle
 
-  static show(
-    BuildContext context, {
+  static void show(BuildContext context, {
     required String label,
     required SnackBarType snackBarType,
     Duration? duration,
     DismissDirection? direction,
     SnackBarBehavior behavior = SnackBarBehavior.fixed,
-    SnackBarStyle snackBarStyle = const SnackBarStyle(),
+    Color? backgroundColor,
+    Color iconColor = Colors.white,
+    TextStyle labelTextStyle = const TextStyle(),
+    int? maxLines,
   }) {
-    switch (snackBarType) {
+    final snackBar = SnackBar(
+      duration: duration ?? const Duration(seconds: 2),
+      dismissDirection: direction ?? DismissDirection.down,
+      behavior: behavior,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      content: SnackBarWidget(
+        onPressed: () => ScaffoldMessenger.of(context).removeCurrentSnackBar(),
+        label: label,
+        backgroundColor: backgroundColor ?? _getBackgroundColor(snackBarType),
+        labelTextStyle: labelTextStyle,
+        iconType: _getIconType(snackBarType),
+        maxLines: maxLines,
+        color: iconColor,
+      ),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  static Color _getBackgroundColor(SnackBarType type) {
+    switch (type) {
       case SnackBarType.success:
-        return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          duration: duration ?? const Duration(seconds: 2),
-          dismissDirection: direction ?? DismissDirection.down,
-          behavior: behavior,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          content: SnackBarWidget(
-            onPressed: () {
-              ScaffoldMessenger.of(context).removeCurrentSnackBar();
-            },
-            label: label,
-            backgroundColor: snackBarStyle.backgroundColor ?? Colors.green,
-            labelTextStyle: snackBarStyle.labelTextStyle,
-            iconType: IconType.check,
-            maxLines: snackBarStyle.maxLines,
-          ),
-        ));
+        return Colors.green;
       case SnackBarType.fail:
-        return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          duration: duration ?? const Duration(seconds: 2),
-          dismissDirection: direction ?? DismissDirection.down,
-          behavior: behavior,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          content: SnackBarWidget(
-            onPressed: () {
-              ScaffoldMessenger.of(context).removeCurrentSnackBar();
-            },
-            label: label,
-            backgroundColor: snackBarStyle.backgroundColor ?? Colors.red,
-            labelTextStyle: snackBarStyle.labelTextStyle,
-            iconType: IconType.fail,
-            maxLines: snackBarStyle.maxLines,
-          ),
-        ));
+        return Colors.red;
       case SnackBarType.alert:
-        return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          duration: duration ?? const Duration(seconds: 2),
-          dismissDirection: direction ?? DismissDirection.down,
-          behavior: behavior,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          content: SnackBarWidget(
-            onPressed: () {
-              ScaffoldMessenger.of(context).removeCurrentSnackBar();
-            },
-            label: label,
-            backgroundColor: snackBarStyle.backgroundColor ?? Colors.black,
-            labelTextStyle: snackBarStyle.labelTextStyle,
-            iconType: IconType.alert,
-            maxLines: snackBarStyle.maxLines,
-          ),
-        ));
+      default:
+        return Colors.black;
+    }
+  }
+
+  static IconType _getIconType(SnackBarType type) {
+    switch (type) {
+      case SnackBarType.success:
+        return IconType.check;
+      case SnackBarType.fail:
+        return IconType.fail;
+      case SnackBarType.alert:
+      default:
+        return IconType.alert;
     }
   }
 }
@@ -124,6 +95,7 @@ class SnackBarWidget extends StatefulWidget implements SnackBarAction {
     this.labelTextStyle,
     this.disabledBackgroundColor = Colors.black,
     this.maxLines,
+    this.color,
   }) : super(key: key);
 
   @override
@@ -147,6 +119,7 @@ class SnackBarWidget extends StatefulWidget implements SnackBarAction {
   final TextStyle? labelTextStyle;
   final IconType iconType;
   final int? maxLines;
+  final Color? color;
 
   @override
   State<SnackBarWidget> createState() => _SnackBarWidgetState();
@@ -191,7 +164,7 @@ class _SnackBarWidgetState extends State<SnackBarWidget> {
                       duration: const Duration(milliseconds: 400),
                       child: IconAnimated(
                         color: _fadeAnimationStart
-                            ? Colors.white
+                            ? widget.color
                             : widget.backgroundColor,
                         active: true,
                         size: 40,
