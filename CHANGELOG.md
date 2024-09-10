@@ -1,3 +1,6 @@
+## 1.2.1
+- fix Readme
+
 ## 1.2.0
 - fix SnackBarStyle error ([#3](https://github.com/GiYeongUM/flutter_icon_snackbar/issues/3))
 - remove SnackBarStyle

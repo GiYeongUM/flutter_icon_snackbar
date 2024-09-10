@@ -34,7 +34,8 @@ IconSnackBar.show(
 
 ## 2. snackbar type
 
-Snackbar has many types, and you can set the types of Save, Fail, and Alert. and icon includes animation, [and here are the icons](https://pub.dev/packages/icon_animated) that you can use.
+Snackbar has many types, and you can set the types of Save, Fail, and Alert. and icon includes
+animation, [and here are the icons](https://pub.dev/packages/icon_animated) that you can use.
 
 <img width="308" alt="" src="https://github.com/GiYeongUM/flutter_icon_snackbar/raw/main/images/snackbar_type_2.gif">
 <img width="308" alt="" src="https://github.com/GiYeongUM/flutter_icon_snackbar/raw/main/images/snackbar_type_3.gif">
@@ -52,13 +53,14 @@ IconSnackBar.show(context: context, snackBarType: SnackBarType.alert, label: 'Da
 Also modify the theme of Snackbar. The theme contains the following data.
 
 ``` dart
-class SnackBarStyle {
-  final Color? backgroundColor;
-  final Color iconColor;
-  final TextStyle labelTextStyle;
+IconSnackBar.show(
+    context: context, 
+    snackBarType: SnackBarType.alert, 
+    label: 'Data required',
+    backgroundColor: Colors.red,
+    iconColor: Colors.white,
+);
 
-  const SnackBarStyle({this.backgroundColor, this.iconColor = Colors.white, this.labelTextStyle = const TextStyle()});
-}
 ```
 
 
