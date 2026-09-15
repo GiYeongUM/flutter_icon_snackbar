@@ -1,3 +1,11 @@
+## 1.3.0
+
+- Update icon_animated to 1.3.0.
+- Require Dart 3.8 and Flutter 3.32 or newer; adopt flutter_lints 6.
+- Cancel pending animation timers on disposal and capture the messenger safely.
+- Return the snack bar controller and respect directional text spacing.
+- Remove deprecated APIs and add dismissal and lifecycle regression tests.
+
 ## 1.2.1
 - fix Readme
 

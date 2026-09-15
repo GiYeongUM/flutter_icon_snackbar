@@ -1,67 +1,59 @@
 # flutter_icon_snackbar
 
-This widget is a simple snackbar of the flutter that contains animations and icons.
+Animated status snack bars with configurable icons, colors, and text.
 
-[![Flutter](https://img.shields.io/badge/Platform-Flutter-blue.svg)](https://flutter.dev/)
+## Installation
 
-## Features
+Requires Flutter 3.32+ and Dart 3.8+.
 
-- **Easier**
-- [Animated Icons](https://pub.dev/packages/icon_animated)
-
-## ⚡ [Installation](https://flutter.dev/docs/development/packages-and-plugins/using-packages)
-
-```yaml
-dependencies:
-  flutter_icon_snackbar: ^<latest_version>
+```sh
+flutter pub add flutter_icon_snackbar
 ```
 
-## 💪 Usage
+## Usage
 
-## 1. common usage
+```dart
+import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
 
-Default type of icon_snackbar.
-
-<img width="308" alt="" src="https://github.com/GiYeongUM/flutter_icon_snackbar/raw/main/images/snackbar_type_1.gif">
-
-``` dart
-IconSnackBar.show(
-    context: context, 
-    snackBarType: SnackBarType.success, 
-    label: 'Save successfully'
-);
-```
-
-## 2. snackbar type
-
-Snackbar has many types, and you can set the types of Save, Fail, and Alert. and icon includes
-animation, [and here are the icons](https://pub.dev/packages/icon_animated) that you can use.
-
-<img width="308" alt="" src="https://github.com/GiYeongUM/flutter_icon_snackbar/raw/main/images/snackbar_type_2.gif">
-<img width="308" alt="" src="https://github.com/GiYeongUM/flutter_icon_snackbar/raw/main/images/snackbar_type_3.gif">
-
-``` dart
-IconSnackBar.show(context: context, snackBarType: SnackBarType.error, label: 'Save failed!');
-```
-
-``` dart
-IconSnackBar.show(context: context, snackBarType: SnackBarType.alert, label: 'Data required');
-```
-
-## 3. custom theme
-
-Also modify the theme of Snackbar. The theme contains the following data.
-
-``` dart
-IconSnackBar.show(
-    context: context, 
-    snackBarType: SnackBarType.alert, 
-    label: 'Data required',
-    backgroundColor: Colors.red,
-    iconColor: Colors.white,
+final controller = IconSnackBar.show(
+  context,
+  snackBarType: SnackBarType.success,
+  label: 'Changes saved',
 );
 
+// Optionally close early, or await controller.closed.
+controller.close();
 ```
 
+The context must be below a ScaffoldMessenger with a registered Scaffold.
+The context is a positional argument. Supported types are `success`, `fail`,
+and `alert`.
+
+Customize `duration`, `direction`, `behavior`, `backgroundColor`, `iconColor`,
+`labelTextStyle`, and `maxLines`. The default duration is two seconds.
+Tapping the snack bar dismisses it immediately.
+
+![Animated snack bar](https://github.com/GiYeongUM/flutter_icon_snackbar/raw/main/images/snackbar_type_1.gif)
+
+## Development
+
+```sh
+flutter pub get
+dart format --output=none --set-exit-if-changed lib example test
+flutter analyze --fatal-infos
+flutter test
+flutter pub publish --dry-run
+```
+
+CI checks the minimum supported Flutter version and the latest stable channel.
+
+## Migration
+
+This release requires Dart 3.8 and Flutter 3.32 or newer. Existing constructor
+and method arguments remain supported. See [CHANGELOG.md](CHANGELOG.md) for fixes.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
 
 

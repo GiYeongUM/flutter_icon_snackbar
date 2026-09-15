@@ -1,31 +1,16 @@
-library flutter_icon_snackbar;
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:icon_animated/icon_animated.dart';
 
-/// soon update more icons
-/// If there is an icon you want, please request it in the github issue space
+/// The status represented by an icon snack bar.
+enum SnackBarType { success, fail, alert }
 
-enum SnackBarType {
-  success,
-  fail,
-  alert,
-}
-
+/// Shows animated status messages through the nearest ScaffoldMessenger.
 class IconSnackBar {
-  /// Show snack bar
-  ///
-  /// [required]
-  /// BuildContext
-  /// label
-  /// snackBarType
-  ///
-  /// [optional]
-  /// Duration (animation)
-  /// DismissDirection (swipe direction)
-  /// SnackBarStyle
-
-  static void show(BuildContext context, {
+  /// Shows a snack bar and returns its controller for dismissal or completion.
+  static ScaffoldFeatureController<SnackBar, SnackBarClosedReason> show(
+    BuildContext context, {
     required String label,
     required SnackBarType snackBarType,
     Duration? duration,
@@ -36,6 +21,8 @@ class IconSnackBar {
     TextStyle labelTextStyle = const TextStyle(),
     int? maxLines,
   }) {
+    assert(maxLines == null || maxLines > 0);
+    final messenger = ScaffoldMessenger.of(context);
     final snackBar = SnackBar(
       duration: duration ?? const Duration(seconds: 2),
       dismissDirection: direction ?? DismissDirection.down,
@@ -43,7 +30,7 @@ class IconSnackBar {
       backgroundColor: Colors.transparent,
       elevation: 0,
       content: SnackBarWidget(
-        onPressed: () => ScaffoldMessenger.of(context).removeCurrentSnackBar(),
+        onPressed: () => messenger.removeCurrentSnackBar(),
         label: label,
         backgroundColor: backgroundColor ?? _getBackgroundColor(snackBarType),
         labelTextStyle: labelTextStyle,
@@ -53,7 +40,7 @@ class IconSnackBar {
       ),
     );
 
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    return messenger.showSnackBar(snackBar);
   }
 
   static Color _getBackgroundColor(SnackBarType type) {
@@ -63,7 +50,6 @@ class IconSnackBar {
       case SnackBarType.fail:
         return Colors.red;
       case SnackBarType.alert:
-      default:
         return Colors.black;
     }
   }
@@ -75,17 +61,15 @@ class IconSnackBar {
       case SnackBarType.fail:
         return IconType.fail;
       case SnackBarType.alert:
-      default:
         return IconType.alert;
     }
   }
 }
 
-/// If you click on the snack bar, the logic of the snack bar ends immediately.
-
+/// Animated snack bar content that invokes [onPressed] when tapped.
 class SnackBarWidget extends StatefulWidget implements SnackBarAction {
   const SnackBarWidget({
-    Key? key,
+    super.key,
     required this.iconType,
     required this.label,
     required this.onPressed,
@@ -96,7 +80,7 @@ class SnackBarWidget extends StatefulWidget implements SnackBarAction {
     this.disabledBackgroundColor = Colors.black,
     this.maxLines,
     this.color,
-  }) : super(key: key);
+  }) : assert(maxLines == null || maxLines > 0);
 
   @override
   final Color? textColor;
@@ -127,18 +111,15 @@ class SnackBarWidget extends StatefulWidget implements SnackBarAction {
 
 class _SnackBarWidgetState extends State<SnackBarWidget> {
   var _fadeAnimationStart = false;
-  var disposed = false;
+  Timer? _animationTimer;
 
   @override
   void initState() {
-    Future.delayed(const Duration(milliseconds: 300), () {
-      if (!disposed) {
-        setState(() {
-          _fadeAnimationStart = true;
-        });
-      }
-    });
     super.initState();
+    _animationTimer = Timer(const Duration(milliseconds: 300), () {
+      if (!mounted) return;
+      setState(() => _fadeAnimationStart = true);
+    });
   }
 
   @override
@@ -146,51 +127,51 @@ class _SnackBarWidgetState extends State<SnackBarWidget> {
     return InkWell(
       onTap: widget.onPressed,
       child: ClipRRect(
-        clipBehavior: Clip.antiAliasWithSaveLayer,
+        clipBehavior: Clip.antiAlias,
         borderRadius: BorderRadius.circular(15),
         child: AnimatedContainer(
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
           color: widget.backgroundColor,
           curve: Curves.easeInOut,
           duration: const Duration(milliseconds: 400),
-          child: SizedBox(
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                CircleAvatar(
-                    radius: 20,
-                    backgroundColor: Colors.white.withOpacity(0),
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 400),
-                      child: IconAnimated(
-                        color: _fadeAnimationStart
-                            ? widget.color
-                            : widget.backgroundColor,
-                        active: true,
-                        size: 40,
-                        iconType: widget.iconType,
-                      ),
-                    )),
-                const SizedBox(width: 8),
-                Flexible(
-                  child: AnimatedContainer(
-                    margin: EdgeInsets.only(left: _fadeAnimationStart ? 0 : 10),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              CircleAvatar(
+                radius: 20,
+                backgroundColor: Colors.transparent,
+                child: IconAnimated(
+                  color: _fadeAnimationStart
+                      ? widget.color
+                      : widget.backgroundColor,
+                  active: true,
+                  size: 40,
+                  iconType: widget.iconType,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Flexible(
+                child: AnimatedContainer(
+                  margin: EdgeInsetsDirectional.only(
+                    start: _fadeAnimationStart ? 0 : 10,
+                  ),
+                  duration: const Duration(milliseconds: 400),
+                  child: AnimatedOpacity(
                     duration: const Duration(milliseconds: 400),
-                    child: AnimatedOpacity(
-                      duration: const Duration(milliseconds: 400),
-                      opacity: _fadeAnimationStart ? 1.0 : 0.0,
-                      child: Text(
-                        widget.label,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: widget.maxLines,
-                        style: widget.labelTextStyle ??
-                            const TextStyle(fontSize: 16, color: Colors.white),
-                      ),
+                    opacity: _fadeAnimationStart ? 1.0 : 0.0,
+                    child: Text(
+                      widget.label,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: widget.maxLines,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: widget.textColor ?? Colors.white,
+                      ).merge(widget.labelTextStyle),
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -199,7 +180,7 @@ class _SnackBarWidgetState extends State<SnackBarWidget> {
 
   @override
   void dispose() {
-    disposed = true;
+    _animationTimer?.cancel();
     super.dispose();
   }
 }

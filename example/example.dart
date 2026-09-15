@@ -11,10 +11,8 @@ class ExampleApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'IconDialog Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      title: 'IconSnackBar Demo',
+      theme: ThemeData(primarySwatch: Colors.blue),
       home: const ExamplePage(),
     );
   }
@@ -26,23 +24,22 @@ class ExamplePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Icon SnackBar'),
-      ),
+      appBar: AppBar(title: const Text('Icon SnackBar')),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             ElevatedButton(
-                onPressed: () {
-                  IconSnackBar.show(
-                    context,
-                    snackBarType: SnackBarType.fail,
-                    maxLines: 1,
-                    label: 'Data required',
-                  );
-                },
-                child: const Text("test"))
+              onPressed: () {
+                IconSnackBar.show(
+                  context,
+                  snackBarType: SnackBarType.fail,
+                  maxLines: 1,
+                  label: 'Data required',
+                );
+              },
+              child: const Text("test"),
+            ),
           ],
         ),
       ),
