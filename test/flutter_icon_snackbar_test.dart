@@ -20,10 +20,10 @@ void main() {
       );
       final icons = [IconType.check, IconType.fail, IconType.alert];
       for (final type in SnackBarType.values) {
-        final controller = IconSnackBar.show(
+        final controller = showIconSnackBar(
           context,
           label: type.name,
-          snackBarType: type,
+          type: type,
           duration: const Duration(minutes: 1),
         );
         await tester.pump();
@@ -53,10 +53,10 @@ void main() {
         ),
       ),
     );
-    final controller = IconSnackBar.show(
+    final controller = showIconSnackBar(
       context,
       label: 'Saved',
-      snackBarType: SnackBarType.success,
+      type: SnackBarType.success,
     );
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 350));
@@ -66,11 +66,11 @@ void main() {
     expect(await controller.closed, SnackBarClosedReason.remove);
   });
 
-  testWidgets('disposal cancels the delayed animation', (tester) async {
+  testWidgets('disposal safely stops the entrance animation', (tester) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-          body: SnackBarWidget(
+          body: IconSnackBarContent(
             iconType: IconType.check,
             label: 'Saved',
             onPressed: () {},
@@ -92,10 +92,10 @@ void main() {
           home: Scaffold(
             body: Directionality(
               textDirection: TextDirection.rtl,
-              child: SnackBarWidget(
+              child: IconSnackBarContent(
                 iconType: IconType.check,
                 label: 'Saved',
-                labelTextStyle: const TextStyle(fontWeight: FontWeight.bold),
+                textStyle: const TextStyle(fontWeight: FontWeight.bold),
                 onPressed: () {},
               ),
             ),
@@ -105,7 +105,12 @@ void main() {
       await tester.pump(const Duration(seconds: 1));
       await tester.pumpAndSettle();
       final text = tester.widget<Text>(find.text('Saved'));
-      expect(text.style!.color, Colors.white);
+      expect(
+        text.style!.color,
+        Theme.of(
+          tester.element(find.text('Saved')),
+        ).colorScheme.onInverseSurface,
+      );
       expect(text.style!.fontWeight, FontWeight.bold);
       expect(tester.takeException(), isNull);
     },
